@@ -1,0 +1,15 @@
+---
+version: "3.7"
+services:
+  db:
+    image: mysql
+    environment:
+      LANG: C.UTF-8
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    ports:
+      - 3306:3306
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+      - ./webapp/sql:/docker-entrypoint-initdb.d
+    container_name: db

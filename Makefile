@@ -25,3 +25,8 @@ staticcheck:
 
 clean:
 	rm -rf bin/*
+
+restartdb:
+	docker-compose stop
+	docker rm $(shell docker ps -aq -f 'ancestor=mysql')
+	docker-compose up -d
