@@ -1,6 +1,33 @@
 ---
 version: "3.7"
 services:
+  h2o:
+    image: lkwg82/h2o-http2-server
+    ports:
+       - "8000:8000"
+    volumes:
+       - "./h2o/etc/h2o:/etc/h2o"
+       - "./h2o/var/log/h2o:/var/log/h2o"
+    working_dir: /etc/h2o
+    restart: always
+    cap_add:
+       - setuid
+       - setgid
+       - chown
+       - sys_admin
+    cap_drop:
+       - ALL
+  api:
+    build:
+      context: ./deploy/api/
+    command: realize start
+    depends_on:
+      - db
+    working_dir: /isucon/webapp/go
+    volumes:
+      - ./:/isucon
+    environment:
+      MYSQL_HOST: db
   db:
     image: mysql
     environment:
