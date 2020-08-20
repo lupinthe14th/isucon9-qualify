@@ -12,4 +12,6 @@ services:
     restart: always
     volumes:
       - ./webapp/sql:/docker-entrypoint-initdb.d
+      - ./db/etc/mysql/conf.d/mysqld.cnf:/etc/mysql/conf.d/mysqld.cnf
+      - ./db/var/log/mysql:/var/log/mysql
     container_name: db
