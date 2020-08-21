@@ -64,3 +64,6 @@ rmapi:
 rmdb:
 	docker-compose stop db
 	docker rm $(shell docker ps -aq -f 'ancestor=mysql')
+
+benchmarker:
+	docker-compose run benchmarker /benchmarker -target-url http://h2o:8000 -payment-url http://payment:5555 -shipment-url http://shipment:7000
