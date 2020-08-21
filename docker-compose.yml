@@ -4,7 +4,7 @@ services:
   h2o:
     image: lkwg82/h2o-http2-server
     ports:
-       - "8000:8000"
+       - "80:8000"
     volumes:
        - "./h2o/etc/h2o:/etc/h2o"
        - "./h2o/var/log/h2o:/var/log/h2o"
@@ -17,10 +17,13 @@ services:
        - sys_admin
     cap_drop:
        - ALL
+    container_name: h2o
   api:
     build:
       context: ./deploy/api/
     command: realize start
+    ports:
+       - "8000:8000"
     depends_on:
       - db
     working_dir: /isucon/webapp/go
@@ -28,6 +31,28 @@ services:
       - ./:/isucon
     environment:
       MYSQL_HOST: db
+    container_name: api
+  payment:
+    build:
+      context: ./deploy/payment/
+    ports:
+       - "5555:5555"
+    container_name: payment
+  shipment:
+    build:
+      context: ./deploy/shipment/
+    ports:
+       - "7000:7000"
+    volumes:
+      - ./initial-data:/initial-data
+    container_name: shipment
+  benchmarker:
+    build:
+      context: ./deploy/benchmarker/
+    volumes:
+      - ./initial-data:/initial-data
+      - ./webapp/public:/webapp/public
+    container_name: benchmarker
   db:
     image: mysql
     environment:
@@ -38,7 +63,10 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     volumes:
-      - ./webapp/sql:/docker-entrypoint-initdb.d
+      - ./webapp/sql/00_create_database.sql:/docker-entrypoint-initdb.d/00_create_database.sql
+      - ./webapp/sql/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./webapp/sql/02_categories.sql:/docker-entrypoint-initdb.d/02_categories.sql
+      - ./webapp/sql/initial.sql:/docker-entrypoint-initdb.d/initial.sql
       - ./db/etc/mysql/conf.d/mysqld.cnf:/etc/mysql/conf.d/mysqld.cnf
       - ./db/var/log/mysql:/var/log/mysql
     container_name: db

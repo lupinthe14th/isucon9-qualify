@@ -26,8 +26,8 @@ import (
 const (
 	sessionName = "session_isucari"
 
-	DefaultPaymentServiceURL  = "http://localhost:5555"
-	DefaultShipmentServiceURL = "http://localhost:7000"
+	DefaultPaymentServiceURL  = "http://payment:5555"
+	DefaultShipmentServiceURL = "http://shipment:7000"
 
 	ItemMinPrice    = 100
 	ItemMaxPrice    = 1000000

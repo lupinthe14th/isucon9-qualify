@@ -5,4 +5,5 @@ go 1.12
 require (
 	github.com/morikuni/failure v0.11.0
 	github.com/skip2/go-qrcode v0.0.0-20190110000554-dc11ecdae0a9
+	honnef.co/go/tools v0.0.1-2020.1.5 // indirect
 )
